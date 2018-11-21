@@ -14,10 +14,10 @@ from random import randint, random
 from future.utils import with_metaclass
 from abc import ABCMeta, abstractproperty, abstractmethod
 from math import sin, cos, pi, sqrt, atan2
-from pyfiglet import Figlet, DEFAULT_FONT
 from PIL import Image
 import re
 
+from subprocess import check_output, CalledProcessError
 from wcwidth.wcwidth import wcswidth
 
 from asciimatics.screen import Screen
@@ -283,14 +283,25 @@ class FigletText(StaticRenderer):
     See http://www.figlet.org/ for details of available fonts.
     """
 
-    def __init__(self, text, font=DEFAULT_FONT, width=200):
+    def __init__(self, text, font='standard', width=200):
         """
         :param text: The text string to convert with Figlet.
         :param font: The Figlet font to use (optional).
         :param width: The maximum width for this text in characters.
         """
         super(FigletText, self).__init__()
-        self._images = [Figlet(font=font, width=width).renderText(text)]
+        # GPL license means we can't use pyfiglet as a library - try some CLI tools instead.
+        try:
+            text = check_output(["pyfiglet", "-w", str(width), "-f", font, text]).decode("utf-8")
+        except OSError:
+            try:
+                text = check_output(["figlet", "-w", str(width), "-f", font, text]).decode("utf-8")
+            except OSError:
+                raise RuntimeError("Please install Figlet - e.g. yum install figlet or pip install pyfiglet")
+            except CalledProcessError:
+                raise RuntimeError("Could not render text - is '{}' a valid font?".format(font))
+
+        self._images = [text]
 
 
 class _ImageSequence(object):

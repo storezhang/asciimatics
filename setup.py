@@ -62,7 +62,6 @@ setup(
              'color colour crossplatform console',
     packages=find_packages(exclude=['contrib', 'docs', 'tests*']),
     install_requires=[
-        'pyfiglet >= 0.7.2',
         'Pillow >= 2.7.0',
         'wcwidth',
         'future',

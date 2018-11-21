@@ -280,3 +280,25 @@ Pypy 6.0             34.3%
 
 Note that the v1.10 test for experimental.py was actually CPU-bound and so slow it was visibly
 juddering.
+
+FigletText isn't working!
+-------------------------
+The FigletText renderer relies on 3rd party tools to create the large text.  The original
+version of those tools was `figlet`.  This is a native application on most Linux
+distributions and is made available under the 3-clause BSD license.  The other option is
+`pyfiglet`, which is currently only available under GPL (and so not suitable for most commercial
+software) and has a larger database of font definitions.
+
+In order to conform with their licensing requirements and my desire to use the Apache 2.0 license
+for asciimatics, I have had to stop linking to pyfiglet and use command line invocation of either
+tool instead.  If you want to use this renderer, you therefore need to decide which is suitable
+for your needs and install it first.  In summary:
+
+======== ======= ========================================= =======================================
+Tool     License Implications                              Installation instructions
+======== ======= ========================================= =======================================
+pyfiglet GPL 2.0 May not suitable for non-free software.   `pip install pyfiglet`
+figlet   BSD     Suitable for all projects, but has fewer  Varies according to your distribution.
+                 font definitions.                         For example: `sudo yum install figlet`
+None     N/A     Cannot use FigletText renderer.           N/A
+======== ======= ========================================= =======================================
