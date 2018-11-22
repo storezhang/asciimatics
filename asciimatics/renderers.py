@@ -15,7 +15,7 @@ from future.utils import with_metaclass
 from abc import ABCMeta, abstractproperty, abstractmethod
 from math import sin, cos, pi, sqrt, atan2
 from PIL import Image
-import reimport os
+import re
 
 from subprocess import check_output, CalledProcessError, PIPE
 from wcwidth.wcwidth import wcswidth
