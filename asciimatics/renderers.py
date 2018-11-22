@@ -301,7 +301,8 @@ class FigletText(StaticRenderer):
             except CalledProcessError:
                 raise RuntimeError("Could not render text - is '{}' a valid font?".format(font))
 
-        self._images = [text]
+        # Normalize for any duplicated empty lines at the end of the output
+        self._images = [text.rstrip("\n") + "\n"]
 
 
 class _ImageSequence(object):
