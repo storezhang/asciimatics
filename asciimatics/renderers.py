@@ -16,6 +16,7 @@ from abc import ABCMeta, abstractproperty, abstractmethod
 from math import sin, cos, pi, sqrt, atan2
 from PIL import Image
 import re
+import os
 
 from subprocess import check_output, CalledProcessError
 from wcwidth.wcwidth import wcswidth
@@ -297,7 +298,8 @@ class FigletText(StaticRenderer):
             try:
                 text = check_output(["figlet", "-w", str(width), "-f", font, text]).decode("utf-8")
             except OSError:
-                raise RuntimeError("Please install Figlet - e.g. yum install figlet or pip install pyfiglet")
+                raise RuntimeError("@@@ diags {}".format(os.environ["PATH"]))
+                # raise RuntimeError("Please install Figlet - e.g. yum install figlet or pip install pyfiglet")
             except CalledProcessError:
                 raise RuntimeError("Could not render text - is '{}' a valid font?".format(font))
 
