@@ -15,10 +15,9 @@ from future.utils import with_metaclass
 from abc import ABCMeta, abstractproperty, abstractmethod
 from math import sin, cos, pi, sqrt, atan2
 from PIL import Image
-import re
-import os
+import reimport os
 
-from subprocess import check_output, CalledProcessError
+from subprocess import check_output, CalledProcessError, PIPE
 from wcwidth.wcwidth import wcswidth
 
 from asciimatics.screen import Screen
@@ -292,13 +291,13 @@ class FigletText(StaticRenderer):
         """
         super(FigletText, self).__init__()
         # GPL license means we can't use pyfiglet as a library - try some CLI tools instead.
+        # Note we need to provide stdin so that the command runs inside Appveyor.
         try:
-            text = check_output(["pyfiglet", "-w", str(width), "-f", font, text]).decode("utf-8")
+            text = check_output(["pyfiglet", "-w", str(width), "-f", font, text], stdin=PIPE).decode("utf-8")
         except OSError as e:
-            raise RuntimeError("@@@ diags: {}\n{}".format(str(e), os.environ["PATH"]))
-
             try:
-                text = check_output(["figlet", "-w", str(width), "-f", font, text]).decode("utf-8")
+                text = check_output(
+                    ["figlet", "-w", str(width), "-f", font, text], stdin=PIPE).decode("utf-8")
             except OSError:
                 raise RuntimeError("Please install Figlet - e.g. yum install figlet or pip install pyfiglet")
             except CalledProcessError:
