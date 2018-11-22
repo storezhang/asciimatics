@@ -294,12 +294,13 @@ class FigletText(StaticRenderer):
         # GPL license means we can't use pyfiglet as a library - try some CLI tools instead.
         try:
             text = check_output(["pyfiglet", "-w", str(width), "-f", font, text]).decode("utf-8")
-        except OSError:
+        except OSError as e:
+            raise RuntimeError("@@@ diags: {}\n{}".format(str(e), os.environ["PATH"]))
+
             try:
                 text = check_output(["figlet", "-w", str(width), "-f", font, text]).decode("utf-8")
             except OSError:
-                raise RuntimeError("@@@ diags {}".format(os.environ["PATH"]))
-                # raise RuntimeError("Please install Figlet - e.g. yum install figlet or pip install pyfiglet")
+                raise RuntimeError("Please install Figlet - e.g. yum install figlet or pip install pyfiglet")
             except CalledProcessError:
                 raise RuntimeError("Could not render text - is '{}' a valid font?".format(font))
 
