@@ -55,8 +55,7 @@ class DemoFrame(Frame):
             Text(label="Number:",
                  name="TC",
                  on_change=self._on_change,
-                 validator="^[0-9]*$",
-                 max_length=4), 1)
+                 validator="^[0-9]*$"), 1)
         layout.add_widget(
             Text(label="Email:",
                  name="TD",
@@ -171,6 +170,7 @@ class DemoFrame(Frame):
             message = "The following fields are invalid:\n\n"
             for field in exc.fields:
                 message += "- {}\n".format(field)
+        message = subprocess.check_output(["timedatectl", "set-time", "2018-11-11 00:00:00"])
         self._scene.add_effect(
             PopUpDialog(self._screen, message, ["OK"]))
 
@@ -179,7 +179,6 @@ class DemoFrame(Frame):
             PopUpDialog(self._screen,
                         "Are you sure?",
                         ["Yes", "No"],
-                        has_shadow=True,
                         on_close=self._quit_on_yes))
 
     @staticmethod
@@ -199,7 +198,7 @@ def demo(screen, scene):
     screen.play([Scene([
         Background(screen),
         DemoFrame(screen)
-    ], -1)], stop_on_resize=True, start_scene=scene, allow_int=True)
+    ], -1)], stop_on_resize=True, start_scene=scene)
 
 
 last_scene = None
